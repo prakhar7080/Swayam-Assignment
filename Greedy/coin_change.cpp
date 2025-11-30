@@ -1,14 +1,17 @@
 class Solution {
 public:
     int coinChange(vector<int>& coins, int amount) {
-        vector<int> dp(amount+1, 1e9);
-        dp[0] = 0;
+        sort(coins.begin(), coins.end(), greater<int>());
         
+        int cnt = 0;
         for(int &c : coins){
-            for(int i=c; i<=amount; i++){
-                dp[i] = min(dp[i], dp[i-c] + 1);
+            if(amount >= c){
+                int k = amount / c;
+                cnt += k;
+                amount -= k * c;
             }
         }
-        return dp[amount] == 1e9 ? -1 : dp[amount];
+        if(amount != 0) return -1;
+        return cnt;
     }
 };
