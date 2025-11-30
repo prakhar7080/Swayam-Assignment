@@ -1,18 +1,23 @@
 class Solution {
 public:
     int knapSack(int W, int wt[], int val[], int n) {
-        vector<vector<int>> dp(n+1, vector<int>(W+1, 0));
+        vector<pair<double,int>> v;
         
-        for(int i=1; i<=n; i++){
-            for(int w=0; w<=W; w++){
-                int take = 0;
-                if(wt[i-1] <= w){
-                    take = val[i-1] + dp[i-1][w-wt[i-1]];
-                }
-                int not_take = dp[i-1][w];
-                dp[i][w] = max(take, not_take);
+        for(int i=0; i<n; i++){
+            double r = (double)val[i] / wt[i];
+            v.push_back({r, i});
+        }
+        
+        sort(v.begin(), v.end(), greater<pair<double,int>>());
+        
+        int total = 0;
+        for(auto &p : v){
+            int idx = p.second;
+            if(wt[idx] <= W){
+                total += val[idx];
+                W -= wt[idx];
             }
         }
-        return dp[n][W];
+        return total;
     }
 };
